@@ -1,0 +1,73 @@
+data:
+  raw:
+    atis_train_data_path: assets/data/raw/ATIS/train.txt
+    atis_test_data_path: assets/data/raw/ATIS/test.txt
+    atis_valid_data_path: assets/data/raw/ATIS/valid.txt
+    snips_train_data_path: assets/data/raw/SNIPS/train.txt
+    snips_test_data_path: assets/data/raw/SNIPS/test.txt
+    snips_valid_data_path: assets/data/raw/SNIPS/valid.txt
+  bin:
+    intent2idx_path: assets/data/bin/intent2idx.pkl
+    tag2idx_path: assets/data/bin/tag2idx.pkl
+    idx2intent_path: assets/data/bin/idx2intent.pkl
+    idx2tag_path: assets/data/bin/idx2tag.pkl
+  prepared:
+    train_data_path: assets/data/prepared/train.csv
+    valid_data_path: assets/data/prepared/valid.csv
+    test_data_path: assets/data/prepared/test.csv
+  training_data_params:
+    dataset:
+      max_seq_len: 100
+    dataloader:
+      batch_size: 32
+train:
+  random_seed: 123
+  models:
+    sentence_embedding_model: sentence-transformers/all-MiniLM-L6-v2
+    word_embedding_model: bert-base-cased
+  diet_model_layers_params:
+    sentence_embedding_input_mapper:
+      input_size: 384
+      output_size: 64
+      list_hidden_layers_sizes: []
+      dropout_prob: 0
+      last_layer_activation_func: leaky_relu
+      batch_norm_flg: false
+    word_embedding_input_mapper:
+      input_size: 768
+      output_size: 64
+      list_hidden_layers_sizes: [256]
+      dropout_prob: 0
+      last_layer_activation_func: leaky_relu
+      batch_norm_flg: false
+    sentence_embedding_output_mapper:
+      input_size: 64
+      output_size: 24
+      list_hidden_layers_sizes: [82]
+      dropout_prob: 0
+      last_layer_activation_func: softmax
+      batch_norm_flg: false
+    word_embedding_output_mapper:
+      input_size: 64
+      output_size: 119
+      list_hidden_layers_sizes: [256]
+      dropout_prob: 0
+      last_layer_activation_func: leaky_relu
+      batch_norm_flg: false
+    transformer_layer:
+      position_enc_dropout : 0
+      max_seq_len_positional_enc : 500
+      d_model : 64
+      n_heads : 1
+      num_encoder_layers : 1
+      num_decoder_layers : 1
+      dim_feedforward : 128
+      dropout : 0
+  train_params:
+    epochs: 3
+    lr: 0.0002
+    weight_decay: 0.0000001
+    w_e: 0.05
+    w_i: 0.95
+  
+  
