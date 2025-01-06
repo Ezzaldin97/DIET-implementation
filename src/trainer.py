@@ -46,7 +46,6 @@ class Trainer:
             device,
             max_seq_len,
         )
-        print(f"train dataset: {self.train_ds.device}")
         self.valid_ds = DIETDataset(
             valid_df,
             sentence_embed_model,
@@ -54,7 +53,6 @@ class Trainer:
             device,
             max_seq_len,
         )
-        print(f"valid dataset: {self.valid_ds.device}")
         self.train_dataloader = DataLoader(
             self.train_ds,
             batch_size = batch_size, 

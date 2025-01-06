@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from loguru import logger
+import os
 
 
 class ExecutorLogger:
@@ -32,6 +33,8 @@ class ExecutorLogger:
         self.logger.add(sys.stdout, level=level, format=self._get_console_format())
 
         if logs_path:
+            if not os.path.exists(logs_path):
+                os.makedirs(logs_path)
             self.logger.add(
                 Path(logs_path) / f"logs_{datetime.now().strftime('%Y%m%d')}.log",
                 level=level,
