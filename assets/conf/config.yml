@@ -19,7 +19,7 @@ data:
     dataset:
       max_seq_len: 100
     dataloader:
-      batch_size: 32
+      batch_size: 256
 train:
   random_seed: 123
   models:
