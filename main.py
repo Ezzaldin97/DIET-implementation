@@ -22,7 +22,7 @@ if not os.path.exists("assets/data/prepared"):
     os.makedirs("assets/data/prepared")
 
 if __name__ == "__main__":
-    logger = ExecutorLogger(os.getenv('LOGS'))
+    logger = ExecutorLogger(os.getenv('LOGS_PATH'))
     device = "cuda:0" if torch.cuda.is_available() else "cpu" 
     conf = Config(config_path=os.getenv("CONFIG_PATH"))
     parser = argparse.ArgumentParser(description="DEIT model parameters")
