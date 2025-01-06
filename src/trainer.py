@@ -129,7 +129,7 @@ class Trainer:
         entities_yb = entities_words[not_padded_idx]
         accumulated_gt_entities = torch.cat([accumulated_gt_entities, entities_yb]).to(self.device)
         updated_entities_weights = generate_class_weights_tensor(
-            accumulated_gt_entities.cpu(), len(self.tags)
+            accumulated_gt_entities.cpu(), len(self.tags), self.device
         )
         return updated_entities_weights.to(self.device)
 

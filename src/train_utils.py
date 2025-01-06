@@ -6,7 +6,7 @@ def calculate_class_weight(n_samplesj, n_classes, n_samples):
     wj = n_samples / (n_classes * n_samplesj)
     return wj
 
-def generate_class_weights_tensor(gt_tensor, num_of_classes):
+def generate_class_weights_tensor(gt_tensor, num_of_classes, device):
     train_ground_truth = pd.DataFrame(gt_tensor)
     if 0 in train_ground_truth.columns:
         train_ground_truth.rename(columns = {0: 'class'}, inplace=True)
@@ -20,5 +20,5 @@ def generate_class_weights_tensor(gt_tensor, num_of_classes):
     grouped_count = train_ground_truth.groupby(['class']).count()
     n_classes = len(grouped_count)
     grouped_count['class_weight'] = grouped_count['count'].apply(lambda x: calculate_class_weight(x, n_classes, n_samples))
-    weights = torch.tensor(grouped_count['class_weight'].tolist(), dtype =  torch.float32)
+    weights = torch.tensor(grouped_count['class_weight'].tolist(), dtype =  torch.float32).to(device)
     return weights

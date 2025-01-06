@@ -88,6 +88,7 @@ if __name__ == "__main__":
         valid_df = pd.concat([atis_valid_df, snips_valid_df]).reset_index().drop("index", axis = 1)
         valid_df.to_csv(conf.config["data"]["prepared"]["valid_data_path"], index=False)
     elif args.process == "train":
+        logger.info(f"Current Device: {device}")
         train_df = pd.read_csv(conf.config["data"]["prepared"]["train_data_path"])
         train_df["tokens"] = train_df["tokens"].apply(str_tolist)
         train_df["cleaned_tokens"] = train_df["cleaned_tokens"].apply(str_tolist)
@@ -102,7 +103,7 @@ if __name__ == "__main__":
             intents = list(pickle.load(file).keys())
         with open(conf.config["data"]["bin"]["tag2idx_path"], "rb") as file:
             tags = list(pickle.load(file).keys())
-        intent_weights = generate_class_weights_tensor(train_df["intent_idx"], len(intents))
+        intent_weights = generate_class_weights_tensor(train_df["intent_idx"], len(intents), device)
         trainer = Trainer(
             train_df=train_df,
             valid_df=valid_df,
