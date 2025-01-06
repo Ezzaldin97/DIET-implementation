@@ -3,7 +3,7 @@ import pandas as pd
 from torch.utils.data import RandomSampler, DataLoader
 from transformers import get_linear_schedule_with_warmup
 from torchmetrics.classification import Accuracy, F1Score
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from src.data_utils import custom_collate
 from src.dataset import DIETDataset
 from src.model import DIET
