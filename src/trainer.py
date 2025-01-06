@@ -1,6 +1,6 @@
 import torch
 import pandas as pd
-from torch.utils.data import RandomSampler, DataLoader
+from torch.utils.data import RandomSampler, DataLoader, SequentialSampler
 from transformers import get_linear_schedule_with_warmup
 from torchmetrics.classification import Accuracy, F1Score
 from tqdm.auto import tqdm
@@ -65,7 +65,7 @@ class Trainer:
             self.valid_ds,
             batch_size = batch_size, 
             collate_fn = custom_collate,
-            sampler = RandomSampler(self.valid_ds)
+            sampler = SequentialSampler(self.valid_ds)
         )
         self.intents = intents
         self.tags = tags
@@ -166,7 +166,7 @@ class Trainer:
             train_i_acc = 0
             train_e_acc = 0
             batch_counter = 0
-            for idx, batch in enumerate(tqdm(self.train_dataloader, desc = "Batch Processing")):
+            for idx, batch in enumerate(self.train_dataloader):
                 batch_counter+=self.batch_size
                 self.model.train()
                 intent_logits, entities_logits, entities_preds, crf_model = self.model(
@@ -193,7 +193,7 @@ class Trainer:
                 if idx%20 == 0:
                     self.logger.info(
                         f"BATCH: {idx}| INTENT loss: {batch_i_loss:.5f}, INTENT F1: {batch_i_acc:.5f}\n" 
-                        f"BATCH: {idx}| NER loss: {batch_e_loss:.5f}, ACC NER F1: Not Implemented Yet\n"
+                        f"BATCH: {idx}| NER loss: {batch_e_loss:.5f}, ACC NER F1: Not Implemented Yet"
                     )
                 self.optimizer.zero_grad()
                 batch_train_loss.backward()
@@ -222,7 +222,7 @@ class Trainer:
                     test_loss=(self.w_e*batch_e_loss)+(self.w_i*batch_i_loss)
                 test_loss /= len(self.valid_dataloader)
                 test_i_acc /= len(self.valid_dataloader)
-            self.logger.info(f"EPOCH: {eidx}| Train loss: {train_loss:.5f}, Train ACC: {train_i_acc:.5f} | Test loss: {test_loss:.5f}, Test ACC: {test_i_acc:.5f}\n")
+            self.logger.info(f"EPOCH: {eidx}| Train loss: {train_loss:.5f}, Train ACC: {train_i_acc:.5f} | Test loss: {test_loss:.5f}, Test ACC: {test_i_acc:.5f}")
             # Calculate training time        
         train_time_end_on_gpu = timer()
         total_train_time_model_0 = Trainer.print_train_time(
