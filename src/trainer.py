@@ -46,6 +46,7 @@ class Trainer:
             device,
             max_seq_len,
         )
+        print(f"train dataset: {self.train_ds.device}")
         self.valid_ds = DIETDataset(
             valid_df,
             sentence_embed_model,
@@ -53,6 +54,7 @@ class Trainer:
             device,
             max_seq_len,
         )
+        print(f"valid dataset: {self.valid_ds.device}")
         self.train_dataloader = DataLoader(
             self.train_ds,
             batch_size = batch_size, 
@@ -74,7 +76,7 @@ class Trainer:
             sentence_emb_output_mapper_conf,
             word_emb_output_mapper_conf,
             len(tags),
-        )
+        ).to(device)
         self.epochs = epochs
         self.logger = logger
         self._total_steps = self.epochs * len(self.train_dataloader)
@@ -159,7 +161,7 @@ class Trainer:
         entities_acc = F1Score(
             task="multiclass", num_classes=len(self.tags)
         ).to(self.device)
-        for eidx, epoch in enumerate(tqdm(range(self.epochs), desc = "Epoch Processing")):
+        for eidx, _ in enumerate(tqdm(range(self.epochs), desc = "Epoch Processing")):
             train_loss, train_i_loss, train_e_loss = 0, 0, 0
             train_i_acc = 0
             train_e_acc = 0
