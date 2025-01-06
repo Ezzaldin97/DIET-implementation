@@ -10,3 +10,6 @@ wheels/
 # Virtual environments
 .venv
 .lightning_studio
+
+## logs directory
+logs/
